@@ -9,11 +9,14 @@ import type { RouterOutputs } from "~/utils/api";
 import dayjs from "dayjs";
 import relateTime from "dayjs/plugin/relativeTime";
 import LoadingPage from "~/components/loading";
+import { useState } from "react";
 
 dayjs.extend(relateTime);
 
 function PostWizard() {
   const { isSignedIn, user } = useUser();
+  const [input, setInput] = useState("");
+  const { mutate } = api.posts.create.useMutation();
 
   console.log(user);
 
@@ -33,7 +36,11 @@ function PostWizard() {
       <input
         placeholder="Type something here!"
         className="grow bg-transparent outline-none"
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
       />
+      <button onClick={() => mutate({ content: input })}>Post</button>
     </div>
   );
 }
@@ -85,7 +92,7 @@ function Feed() {
 export default function Home() {
   const { isLoaded: userLoaded, isSignedIn } = useUser();
 
-  // Start fetching posts 
+  // Start fetching posts
   api.posts.getAll.useQuery();
 
   // Return empty div if user is not loaded and posts are not loaded
