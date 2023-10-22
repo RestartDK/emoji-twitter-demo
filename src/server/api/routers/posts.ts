@@ -20,10 +20,10 @@ const filterUserForClient = (user: User) => {
   };
 };
 
-// Create a new ratelimiter, that allows 10 requests per 10 seconds
+// Create a new ratelimiter, that allows 3 requests per 1 min
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(10, "10 s"),
+  limiter: Ratelimit.slidingWindow(3, "1 m"),
   analytics: true,
 });
 
@@ -74,6 +74,15 @@ export const postsRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const authorID = ctx.userId;
+
+      const {success} = await ratelimit.limit(authorID)
+
+      if (!success) {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "You are doing that too much. Please wait a minute.",
+        });
+      }
 
       const post = await ctx.db.post.create({
         data: {
