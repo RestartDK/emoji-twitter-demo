@@ -8,9 +8,9 @@ import type { RouterOutputs } from "~/utils/api";
 
 import dayjs from "dayjs";
 import relateTime from "dayjs/plugin/relativeTime";
+import LoadingPage from "~/components/loading";
 
 dayjs.extend(relateTime);
-
 
 function PostWizard() {
   const { isSignedIn, user } = useUser();
@@ -28,7 +28,7 @@ function PostWizard() {
         alt="Profile image"
         className="h-14 w-14 rounded-full"
         width={56}
-        height={56} 
+        height={56}
       />
       <input
         placeholder="Type something here!"
@@ -62,17 +62,35 @@ function PostView(props: PostWithUser) {
   );
 }
 
-export default function Home() {
-  const user = useUser();
+function Feed() {
+  const { data, isLoading: postsLoading } = api.posts.getAll.useQuery();
 
-  const { data, isLoading } = api.posts.getAll.useQuery();
-
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (postsLoading) {
+    return <LoadingPage />;
   }
 
   if (!data) {
-    return <div>Something went wrong</div>;
+    return <div>Something went wrong!</div>;
+  }
+
+  return (
+    <div className="flex flex-col">
+      {data?.map((fullPost) => (
+        <PostView {...fullPost} key={fullPost.post.id} />
+      ))}
+    </div>
+  );
+}
+
+export default function Home() {
+  const { isLoaded: userLoaded, isSignedIn } = useUser();
+
+  // Start fetching posts 
+  api.posts.getAll.useQuery();
+
+  // Return empty div if user is not loaded and posts are not loaded
+  if (!userLoaded) {
+    return <div></div>;
   }
 
   return (
@@ -85,18 +103,14 @@ export default function Home() {
       <main className="flex h-screen justify-center">
         <div className="w-full border-x-2 border-slate-400 md:max-w-2xl">
           <div className="flex border-b border-slate-400 p-4">
-            {!user.isSignedIn && (
+            {!isSignedIn && (
               <div className="flex justify-center">
                 <SignInButton />
               </div>
             )}
-            {user.isSignedIn && <PostWizard />}
+            {isSignedIn && <PostWizard />}
           </div>
-          <div className="flex flex-col">
-            {data?.map((fullPost) => (
-              <PostView {...fullPost} key={fullPost.post.id} />
-            ))}
-          </div>
+          <Feed />
         </div>
       </main>
     </>
