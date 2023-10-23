@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  DATABASE_URL: "postgresql://postgres:<DATABASE_URL>:5432/postgres"
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -34,3 +31,8 @@ jobs:
 
     - name: Run Lint
       run: npm run lint # This assumes you have a "lint" script specified in your package.json
+
+    - name: Use Database URL
+      run: echo "Database URL is $DATABASE_URL"
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }} # This is how you use the secret as an environment variable
