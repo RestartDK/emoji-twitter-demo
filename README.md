@@ -1,6 +1,6 @@
 # 🐦 Emoji Twitter Clone
 
-This project was made through a walkthrough [video](https://www.youtube.com/watch?v=YkOSUVzOAA4&t=2308s) from youtube from t3 (theo) and bootstrapped with `create-t3-app`. Built with the Next.js  clerk, tRPC, TypeScript, Prisma & Tailwind
+This project was made through a walkthrough [video](https://www.youtube.com/watch?v=YkOSUVzOAA4&t=2308s) from youtube from t3 (theo) and bootstrapped with `create-t3-app`. Built with Next.js  clerk, tRPC, TypeScript, Prisma & Tailwind
 
 ## ✏️ Getting Started 
 
