@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x] # You can specify more versions for a matrix build if needed
+        node-version: [20.8.0] # You can specify more versions for a matrix build if needed
 
     steps:
     - uses: actions/checkout@v2
