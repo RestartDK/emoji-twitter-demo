@@ -1,30 +1,23 @@
 import Head from "next/head";
 import Image from "next/image";
-import {
+import type {
   GetStaticPaths,
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from "next";
-import { createServerSideHelpers } from "@trpc/react-query/server";
-import { appRouter } from "~/server/api/root";
-import SuperJSON from "superjson";
 
-import { db } from "~/server/db";
 import { api } from "~/utils/api";
 import Layout from "~/components/layout";
 import { LoadingPage } from "~/components/loading";
 import PostView from "~/components/postview";
+import generateServerSideHelper from "~/server/helpers/serverSideHelper";
 
 type StaticProps = InferGetStaticPropsType<typeof getStaticProps>;
 
 export async function getStaticProps(
   context: GetStaticPropsContext<{ slug: string }>,
 ) {
-  const helpers = createServerSideHelpers({
-    router: appRouter,
-    ctx: { db, userId: null },
-    transformer: SuperJSON, // optional - adds superjson serialization
-  });
+  const helpers = generateServerSideHelper();
 
   const slug = context.params?.slug;
 
@@ -65,7 +58,6 @@ function ProfileFeed(props: {userID: string}) {
       ))}
     </div>
   );
-
 }
 
 export default function ProfilePage({ username }: StaticProps) {

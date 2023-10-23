@@ -4,16 +4,12 @@ import { SignInButton, useUser } from "@clerk/nextjs";
 
 import { api } from "~/utils/api";
 
-import dayjs from "dayjs";
-import relateTime from "dayjs/plugin/relativeTime";
 import { LoadingPage } from "~/components/loading";
 import { LoadingSpinner } from "~/components/loading";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import Layout from "~/components/layout";
 import PostView from "~/components/postview";
-
-dayjs.extend(relateTime);
 
 function PostWizard() {
   const { isSignedIn, user } = useUser();
